@@ -72,10 +72,10 @@ const VALUES_DATA = [
 const TEAM_MEMBERS = [
   {
     name: "Prem Shaw",
-    role: "Team Leader & Full-Stack Developer",
+    role: "Founder & Creator — Team Leader, Full-Stack Developer",
     initials: "PS",
     description:
-      "Guides the team, manages development & deployment, and builds the Learnova platform end-to-end to ensure a seamless and impactful experience.",
+      "Founder of Learnova. Leads the team and built the platform end-to-end — from architecture and backend services to frontend UX and deployment — ensuring a seamless, scalable learning experience.",
     color: "from-purple-500 to-pink-500",
   },
   {
@@ -271,7 +271,7 @@ export default function AboutPage() {
         <div
           className="absolute w-96 h-96 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"
           style={mouseOrbStyle}
-          />
+        />
 
         {/* Floating particles */}
         <div className="absolute inset-0 overflow-hidden">

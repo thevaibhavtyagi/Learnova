@@ -41,7 +41,7 @@ export const metadata = {
     "Learnova",
   ],
   authors: [{ name: "Learnova Team" }],
-  creator: "Learnova",
+  creator: "Prem Shaw",
   publisher: "Learnova",
   robots: {
     index: true,
@@ -91,7 +91,7 @@ export const metadata = {
     "application/ld+json": JSON.stringify([
       {
         "@context": "https://schema.org",
-        "@type": "WebSite",
+        "@type": "website",
         name: "Learnova",
         alternateName: "Learnova Education Platform",
         url: "https://learnova-web.vercel.app",
