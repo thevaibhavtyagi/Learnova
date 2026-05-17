@@ -19,10 +19,7 @@ export default function InstallPWA() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js", { scope: "/" })
-        .then((registration) => {
-          // Check for updates
-          registration.addEventListener("updatefound", () => {});
-        })
+        .then(() => {})
         .catch((error) => {
           console.error("Service Worker registration failed:", error);
         });
