@@ -33,18 +33,11 @@ export function Navbar() {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
- 
-  const {
-  notifications,
-  removeNotification,
-  markAsRead,
-  markAllAsRead,
-  addNotification,
-  } = useNotifications();
 
-  const unreadCount = notifications.filter(
-  (n) => !n.read
-  ).length;
+  
+const [notifications, setNotifications] = useState([]);
+
+const [unreadCount, setUnreadCount] = useState(0);
 
   const { user, userProfile, signOut, isAuthenticated } =
     useAuthContext();
@@ -258,6 +251,7 @@ useEffect(() => {
   );
 
   const handleImageError = (e) => {
+
     const img = e.target;
 
     const fallback =
@@ -413,30 +407,34 @@ useEffect(() => {
                             </button>
                           )}
                         </div>
+<div className="max-h-72 overflow-y-auto">
+  {notifications.length === 0 ? (
+    <div className="p-6 text-center">
+      <Bell className="h-10 w-10 mx-auto text-white/30 mb-3" />
+      <p className="text-white/50 text-sm">
+        No notifications available
+      </p>
+    </div>
+  ) : (
+    notifications.map((n) => (
+      <div
+        key={n.id}
+        onClick={() => markAsRead(n.id)}
+        className={`p-4 border-b border-white/5 cursor-pointer hover:bg-white/5 ${
+          !n.read ? "bg-accent/5" : ""
+        }`}
+      >
+        <p className="text-sm text-white">
+          {n.message}
+        </p>
 
-                        <div className="max-h-72 overflow-y-auto">
-                          {notifications.map((n) => (
-                            <button
-                              key={n.id}
-                              onClick={() =>
-                                markAsRead(n.id)
-                              }
-                              className={`p-4 border-b border-white/5 cursor-pointer hover:bg-accent/10 ${
-                                !n.read
-                                  ? "bg-accent/5"
-                                  : ""
-                              }`}
-                            >
-                              <p className="text-sm text-foreground">
-                                {n.message}
-                              </p>
-
-                              <p className="text-xs text-foreground/40 mt-1">
-                                {n.time}
-                              </p>
-                            </button>
-                          ))}
-                        </div>
+        <p className="text-xs text-white/40 mt-1">
+          {n.time}
+        </p>
+      </div>
+    ))
+  )}
+</div>
                       </div>
                     )}
                   </div>
