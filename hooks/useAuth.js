@@ -44,7 +44,6 @@ export const useAuth = () => {
       setLoading(false);
       return;
     }
-
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         if (firebaseUser) {
@@ -79,7 +78,6 @@ export const useAuth = () => {
 
         setError(null);
       } catch (err) {
-        console.error("Auth state change error:", err);
         setError(err.message);
         setUser(null);
         setUserProfile(null);
@@ -113,7 +111,6 @@ export const useAuth = () => {
         }
       }
     } catch (err) {
-      console.error("Sign out error:", err);
       setError(err.message);
     }
   };

@@ -88,7 +88,7 @@ export default function AuthPage() {
 
     const { isValid, errors: validationErrors } = validateForm(
       formData,
-      isLogin
+      isLogin,
     );
 
     if (!isValid) {
@@ -106,8 +106,8 @@ export default function AuthPage() {
         result = await loginWithEmail(email, password, selectedRole);
       } else {
         result = await signupWithEmail(email, password, selectedRole, {
-            fullName,
-            instituteName,
+          fullName,
+          instituteName,
         });
       }
 
@@ -120,15 +120,18 @@ export default function AuthPage() {
         setShowRoleSelection(true);
         router.push("/profile");
       } else if (result.success) {
-        toast.success(isLogin ? "Successfully logged in!" : "Account created successfully!");
+        toast.success(
+          isLogin ? "Successfully logged in!" : "Account created successfully!",
+        );
         setShowRoleSelection(true);
         redirectBasedOnRole(result.userData.role, router);
       } else {
         toast.error(result.error || "Authentication failed. Please try again.");
-        setErrors({ submit: result.error || "Something went wrong. Please try again." });
+        setErrors({
+          submit: result.error || "Something went wrong. Please try again.",
+        });
       }
     } catch (err) {
-      console.error("Auth error:", err);
       toast.error("An unexpected error occurred. Please try again.");
       setErrors({ submit: "An unexpected error occurred. Please try again." });
     } finally {
@@ -177,7 +180,6 @@ export default function AuthPage() {
         setErrors({ submit: result.error });
       }
     } catch (err) {
-      console.error("❌ Google auth error:", err);
       toast.error("An unexpected error occurred. Please try again.");
       setErrors({ submit: "An unexpected error occurred. Please try again." });
     } finally {
@@ -203,14 +205,15 @@ export default function AuthPage() {
       const result = await resetPassword(emailToReset);
 
       if (result.success) {
-        toast.success("Password reset email sent! Check your inbox and spam folder.");
+        toast.success(
+          "Password reset email sent! Check your inbox and spam folder.",
+        );
         setShowForgotPassword(false);
         setForgotPasswordEmail("");
       } else {
         setErrors({ forgotEmail: result.error });
       }
     } catch (err) {
-      console.error("Password reset error:", err);
       setErrors({
         forgotEmail: "Failed to send reset email. Please try again.",
       });
