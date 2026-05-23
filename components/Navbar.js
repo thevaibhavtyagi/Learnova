@@ -43,6 +43,7 @@ export function Navbar() {
   const { user, userProfile, signOut, isAuthenticated } = useAuthContext();
 
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -140,6 +141,45 @@ export function Navbar() {
       document.body.classList.remove("overflow-hidden");
     }
     return () => document.body.classList.remove("overflow-hidden");
+  }, [isMenuOpen]);
+
+  // Trap focus in mobile menu
+  useEffect(() => {
+    if (!isMenuOpen || !mobileMenuRef.current) return;
+
+    const menuNode = mobileMenuRef.current;
+    const focusableElements = menuNode.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    // Focus the first focusable element when the menu opens
+    setTimeout(() => {
+      if (firstElement) firstElement.focus();
+    }, 100);
+
+    const handleTab = (e) => {
+      if (e.key !== "Tab") return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    menuNode.addEventListener("keydown", handleTab);
+    return () => menuNode.removeEventListener("keydown", handleTab);
   }, [isMenuOpen]);
 
   // Close menus on route change
@@ -470,6 +510,7 @@ export function Navbar() {
 
       {/* Mobile Menu Dropdown Drawer */}
       <div
+        ref={mobileMenuRef}
         className={`fixed z-[68] left-1/2 -translate-x-1/2 transition-all duration-500 ease-in-out md:hidden flex flex-col ${scrollProgressValue > 0 ? "w-full top-16" : "w-[90%] max-w-6xl top-[5.5rem]"
           }`}
       >
