@@ -25,7 +25,11 @@ import {
 } from "lucide-react";
 
 import ReactMarkdown from "react-markdown";
-import { FixedSizeList as List } from "react-window";
+
+/**
+ * react-window v2 import
+ */
+import { List } from "react-window";
 
 import { CONTACT_INFO } from "../constants/contact";
 
@@ -97,11 +101,13 @@ const themeClasses = {
 
   message: {
     bot: "bg-slate-800 text-slate-100",
+
     user:
       "bg-gradient-to-r from-purple-600 to-indigo-600 text-white",
 
     avatar: {
       bot: "bg-slate-700 text-purple-300",
+
       user:
         "bg-gradient-to-r from-purple-600 to-indigo-600 text-white",
     },
@@ -115,9 +121,6 @@ const themeClasses = {
 
   suggestion:
     "bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700",
-
-  loading:
-    "bg-slate-800 border border-slate-700",
 };
 
 const markdownComponents = {
@@ -145,7 +148,8 @@ const MessageRow = ({
   style,
   data,
 }) => {
-  const message = data.messages[index];
+  const message =
+    data.messages[index];
 
   return (
     <div
@@ -160,11 +164,11 @@ const MessageRow = ({
         }`}
       >
         <div
-          className={`flex max-w-sm lg:max-w-md ${
+          className={`flex max-w-sm lg:max-w-md gap-2 ${
             message.role === "assistant"
               ? "flex-row"
               : "flex-row-reverse"
-          } items-end gap-2`}
+          }`}
         >
           <div
             className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
@@ -173,7 +177,8 @@ const MessageRow = ({
                 : themeClasses.message.avatar.user
             }`}
           >
-            {message.role === "assistant" ? (
+            {message.role ===
+            "assistant" ? (
               <Bot size={16} />
             ) : (
               <User size={16} />
@@ -182,12 +187,14 @@ const MessageRow = ({
 
           <div
             className={`px-4 py-3 rounded-2xl shadow-sm ${
-              message.role === "assistant"
+              message.role ===
+              "assistant"
                 ? themeClasses.message.bot
                 : themeClasses.message.user
             }`}
           >
-            {message.role === "assistant" ? (
+            {message.role ===
+            "assistant" ? (
               <ReactMarkdown
                 components={
                   markdownComponents
@@ -247,13 +254,18 @@ const LearnovaChatbot = () => {
   // Auto-scroll
   useEffect(() => {
     if (listRef.current) {
-      listRef.current.scrollToItem(
-        messages.length - 1
-      );
+      try {
+        listRef.current.scrollToRow({
+          index:
+            messages.length - 1,
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
   }, [messages]);
 
-  // API config check
+  // Check API availability
   useEffect(() => {
     let mounted = true;
 
@@ -275,22 +287,25 @@ const LearnovaChatbot = () => {
     };
   }, []);
 
-  // Input change
-  const handleInputChange = (e) => {
-    setInputMessage(e.target.value);
+  const handleInputChange = (
+    e
+  ) => {
+    setInputMessage(
+      e.target.value
+    );
 
     if (textareaRef.current) {
       textareaRef.current.style.height =
         "auto";
 
       textareaRef.current.style.height = `${Math.min(
-        textareaRef.current.scrollHeight,
+        textareaRef.current
+          .scrollHeight,
         120
       )}px`;
     }
   };
 
-  // Send message
   const handleSendMessage =
     useCallback(
       async (e) => {
@@ -308,17 +323,19 @@ const LearnovaChatbot = () => {
 
         const userMessage = {
           id: Date.now(),
+
           role: "user",
+
           content: userQuery,
-          timestamp: Date.now(),
+
+          timestamp:
+            Date.now(),
         };
 
-        const updatedMessages = [
-          ...messages,
+        setMessages((prev) => [
+          ...prev,
           userMessage,
-        ];
-
-        setMessages(updatedMessages);
+        ]);
 
         setInputMessage("");
 
@@ -341,6 +358,7 @@ const LearnovaChatbot = () => {
 
               body: JSON.stringify({
                 message: userQuery,
+
                 category:
                   currentCategory,
               }),
@@ -358,11 +376,16 @@ const LearnovaChatbot = () => {
           setMessages((prev) => [
             ...prev,
             {
-              id: Date.now() + 1,
-              role: "assistant",
+              id:
+                Date.now() + 1,
+
+              role:
+                "assistant",
+
               content:
                 data?.message ||
                 "No response generated.",
+
               timestamp:
                 Date.now(),
             },
@@ -376,9 +399,14 @@ const LearnovaChatbot = () => {
           setMessages((prev) => [
             ...prev,
             {
-              id: Date.now() + 1,
-              role: "assistant",
+              id:
+                Date.now() + 1,
+
+              role:
+                "assistant",
+
               content: `**Offline Mode:** ${fallbackResponses[currentCategory]}`,
+
               timestamp:
                 Date.now(),
             },
@@ -390,7 +418,6 @@ const LearnovaChatbot = () => {
       [
         inputMessage,
         isLoading,
-        messages,
         currentCategory,
       ]
     );
@@ -409,7 +436,6 @@ const LearnovaChatbot = () => {
       <header className="flex items-center justify-between px-4 py-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-xl">
 
         <div className="flex items-center gap-3">
-
           <div className="p-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600">
             <Sparkles size={18} />
           </div>
@@ -425,19 +451,17 @@ const LearnovaChatbot = () => {
           </div>
         </div>
 
-        <div>
-          {hasApiKey ? (
-            <span className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-              <CheckCircle2 size={12} />
-              Live
-            </span>
-          ) : (
-            <span className="flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-              <AlertCircle size={12} />
-              Sandbox
-            </span>
-          )}
-        </div>
+        {hasApiKey ? (
+          <span className="flex items-center gap-1 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+            <CheckCircle2 size={12} />
+            Live
+          </span>
+        ) : (
+          <span className="flex items-center gap-1 text-xs text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+            <AlertCircle size={12} />
+            Sandbox
+          </span>
+        )}
       </header>
 
       {/* Categories */}
@@ -473,22 +497,23 @@ const LearnovaChatbot = () => {
       {/* Messages */}
       <main className="flex-1 overflow-hidden">
 
-        {messages.length > 0 ? (
-          <List
-            ref={listRef}
-            height={500}
-            itemCount={messages.length}
-            itemSize={120}
-            itemData={itemData}
-            width="100%"
-          >
-            {MessageRow}
-          </List>
-        ) : (
-          <div className="p-4">
-            No messages
-          </div>
-        )}
+        <List
+          ref={listRef}
+          style={{
+            height: 500,
+            width: "100%",
+          }}
+          rowCount={
+            messages.length
+          }
+          rowHeight={120}
+          rowComponent={
+            MessageRow
+          }
+          rowProps={{
+            data: itemData,
+          }}
+        />
 
         {/* Suggestions */}
         {messages.length === 1 && (
@@ -507,11 +532,11 @@ const LearnovaChatbot = () => {
               ) => (
                 <button
                   key={index}
-                  onClick={() => {
+                  onClick={() =>
                     setInputMessage(
                       question
-                    );
-                  }}
+                    )
+                  }
                   className={`block w-full text-left text-sm px-3 py-2 rounded-lg transition-all ${themeClasses.suggestion}`}
                 >
                   {question}
@@ -524,7 +549,6 @@ const LearnovaChatbot = () => {
         {/* Loading */}
         {isLoading && (
           <div className="px-4 py-3">
-
             <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-2xl px-4 py-3 w-fit">
 
               <div className="flex gap-1">
@@ -557,6 +581,7 @@ const LearnovaChatbot = () => {
 
       {/* Footer */}
       <div className="px-4 py-2 border-t border-slate-800 bg-slate-900/70">
+
         <div className="flex justify-center gap-4 text-xs">
 
           <a
