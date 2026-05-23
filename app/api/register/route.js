@@ -248,9 +248,7 @@ export const POST =
         !validationResult.success
       ) {
         return jsonError(
-          validationResult
-            .error.errors[0]
-            .message,
+          validationResult.error.issues?.[0]?.message || "Validation failed",
           400
         );
       }
