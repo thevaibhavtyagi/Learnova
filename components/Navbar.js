@@ -441,7 +441,7 @@ export function Navbar() {
                 {isMenuOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
               </Button>
             </div>
-
+                  </div>
           </div>
         </nav>
 
