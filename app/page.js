@@ -36,7 +36,6 @@ import {
 import Link from "next/link";
 import { analytics } from "@/lib/firebaseConfig";
 import { logEvent } from "firebase/analytics";
-import LearnovaChatbot from "@/components/ChatBot";
 
 // Constants moved outside component for better performance
 const PARTICLES_DATA = [
