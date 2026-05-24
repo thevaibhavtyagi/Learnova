@@ -45,6 +45,7 @@ import {
   Moon,
   Keyboard,
   Languages, // Added for the translation button icon
+  Search,
 } from "lucide-react";
 
 export function Navbar() {
@@ -297,6 +298,17 @@ export function Navbar() {
             {/* Right Group Controls */}
             <div className="hidden sm:flex items-center space-x-3">
               
+              {/* Global Search Button */}
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("learnova:open-search"))}
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors border border-zinc-200/40 dark:border-zinc-800/50 cursor-pointer"
+                aria-label="Open search modal"
+              >
+                <Search className="h-4 w-4 text-zinc-400" />
+                <span className="hidden md:inline">Search</span>
+                <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-900 text-zinc-400 text-[10px] rounded border border-zinc-200 dark:border-zinc-800 font-mono leading-none">Ctrl K</kbd>
+              </button>
+
               {/* Language Selector Dropdown */}
               <div className="relative" ref={langRef}>
                 <button
@@ -554,17 +566,30 @@ export function Navbar() {
             </div>
 
             {/* Shortcuts Footer */}
-            <div className="text-center space-y-2 pt-1">
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  window.dispatchEvent(new CustomEvent("learnova:open-shortcuts"));
-                }}
-                className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-blue-600 transition-colors text-xs"
-              >
-                <Keyboard className="h-3.5 w-3.5" />
-                <span>Keyboard Shortcuts</span>
-              </button>
+            <div className="text-center space-y-2 pt-1 flex flex-col items-center">
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    window.dispatchEvent(new CustomEvent("learnova:open-search"));
+                  }}
+                  className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-blue-600 transition-colors text-xs"
+                >
+                  <Search className="h-3.5 w-3.5" />
+                  <span>Search</span>
+                </button>
+                <span className="text-zinc-600 dark:text-zinc-800">|</span>
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    window.dispatchEvent(new CustomEvent("learnova:open-shortcuts"));
+                  }}
+                  className="inline-flex items-center gap-1.5 text-zinc-400 hover:text-blue-600 transition-colors text-xs"
+                >
+                  <Keyboard className="h-3.5 w-3.5" />
+                  <span>Shortcuts</span>
+                </button>
+              </div>
               <p className="text-zinc-400/50 text-[10px]">© {new Date().getFullYear()} Learnova.</p>
             </div>
 
