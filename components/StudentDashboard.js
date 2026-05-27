@@ -57,6 +57,7 @@ import StreakCounter from "./gamification/StreakCounter";
 import XpProgressBar from "./gamification/XpProgressBar";
 import BadgeGallery from "./gamification/BadgeGallery";
 import ComplaintForm from "@/components/ComplaintForm";
+import StreakTracker from "@/components/ui/StreakTracker";
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -374,9 +375,12 @@ setRecentActivity(mapped);
               </div>
 
               <div>
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
-                  {user?.displayName || user?.email?.split("@")[0] || "Student"}
-                </h1>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
+                    {user?.displayName || user?.email?.split("@")[0] || "Student"}
+                  </h1>
+                  <StreakTracker />
+                </div>
                 <div className="text-sm text-gray-400">
                   {user?.email || "No email"}
                 </div>

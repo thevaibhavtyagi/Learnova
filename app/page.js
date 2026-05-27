@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   TrendingUp, 
   ArrowRight, 
@@ -15,7 +15,9 @@ import {
   BarChart3, 
   GraduationCap, 
   BookOpen, 
-  Users 
+  Users,
+  ChevronDown,
+  HelpCircle
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 
@@ -92,6 +94,25 @@ const ROLE_DATA = {
   }
 };
 
+const FAQ_ITEMS = [
+  {
+    question: "How does the AI Attendance Engine prevent proxy attendance?",
+    answer: "Our AI Attendance Engine integrates intelligent multi-layered verification—including automated anomaly detection and real-time streak monitoring—to validate records effortlessly without manual intervention."
+  },
+  {
+    question: "Can the Smart Curriculum Planner adjust to sudden calendar shifts?",
+    answer: "Absolutely. The intuitive drag-and-drop timeline updates dependent curriculum milestones globally, instantly broadcasting the adjusted velocity across your specific department layout."
+  },
+  {
+    question: "Is data synchronized in real-time across multiple branches?",
+    answer: "Yes. Learnova features built-in multi-branch syncing. Any institutional directive, audit report update, or compliance adjustment updates across all connected campuses immediately."
+  },
+  {
+    question: "What platform analytics are visible to students?",
+    answer: "Students receive dedicated dashboards highlighting active attendance thresholds to bypass credit penalties, upcoming assignment deadlines, and aligned syllabus timelines."
+  }
+];
+
 // --- High-Fidelity Child Components ---
 
 function Reveal({ children, className = "", delay = 0 }) {
@@ -125,6 +146,37 @@ function ActionButton({ children, href }) {
     >
       {children}
     </Link>
+  );
+}
+
+// Custom Accordion Item for the FAQ Section
+function FAQAccordionItem({ question, answer, isOpen, onToggle }) {
+  return (
+    <div className="border border-gray-200/60 dark:border-white/5 bg-white dark:bg-zinc-900/20 backdrop-blur-md rounded-2xl overflow-hidden transition-all duration-300">
+      <button
+        onClick={onToggle}
+        className="w-full flex justify-between items-center p-5 md:p-6 text-left font-semibold text-black dark:text-zinc-200 hover:text-purple-600 dark:hover:text-purple-400 transition-colors focus:outline-none"
+      >
+        <span className="text-sm md:text-base leading-relaxed">{question}</span>
+        <ChevronDown 
+          className={`w-5 h-5 text-purple-500 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} 
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <div className="px-5 pb-5 md:px-6 md:pb-6 text-xs md:text-sm text-muted-foreground leading-relaxed border-t border-gray-100 dark:border-white/[0.02] pt-4">
+              {answer}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -203,6 +255,7 @@ function CommentSection() {
 export default function Page() {
   const [hoveredRing, setHoveredRing] = useState(null);
   const [activeRole, setActiveRole] = useState("admins");
+  const [openFaqIdx, setOpenFaqIdx] = useState(null);
 
   return (
     <>
@@ -345,7 +398,7 @@ export default function Page() {
           </div>
         </section>
 
-        {/* --- NEW SECTION: FEATURE GRID --- */}
+        {/* --- FEATURE GRID --- */}
         <section id="features" className="py-20 bg-gray-50/40 dark:bg-zinc-950/40 border-y border-gray-100 dark:border-white/[0.02]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <Reveal className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -386,7 +439,7 @@ export default function Page() {
           </div>
         </section>
 
-        {/* --- NEW SECTION: ROLE-BASED TAILORED WORKFLOWS --- */}
+        {/* --- ROLE-BASED TAILORED WORKFLOWS --- */}
         <section id="roles" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             
@@ -451,6 +504,40 @@ export default function Page() {
                 </ul>
               </motion.div>
             </div>
+          </div>
+        </section>
+
+        {/* --- NEW SECTION: FAQ ACCORDION --- */}
+        <section id="faqs" className="py-20 bg-gray-50/40 dark:bg-zinc-950/40 border-y border-gray-100 dark:border-white/[0.02]">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Reveal className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+              <SectionBadge
+                icon={HelpCircle}
+                text="Common Queries"
+                gradient="from-purple-500/10 to-indigo-500/10 dark:from-purple-500/20 dark:to-indigo-500/20"
+                borderClass="border-purple-200/50 dark:border-purple-500/30"
+                iconClass="text-purple-500"
+                textClass="text-purple-700 dark:text-indigo-300"
+              />
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-black dark:text-white">
+                Frequently Asked Questions
+              </h2>
+              <p className="text-muted-foreground text-sm md:text-base">
+                Got structural questions about platform functionalities? Look through our documented answers below.
+              </p>
+            </Reveal>
+
+            <Reveal className="space-y-4" delay={0.1}>
+              {FAQ_ITEMS.map((faq, index) => (
+                <FAQAccordionItem
+                  key={index}
+                  question={faq.question}
+                  answer={faq.answer}
+                  isOpen={openFaqIdx === index}
+                  onToggle={() => setOpenFaqIdx(openFaqIdx === index ? null : index)}
+                />
+              ))}
+            </Reveal>
           </div>
         </section>
 
