@@ -1,8 +1,7 @@
-import { NextResponse } from "next/server";
 import { connectDb } from "@/lib/mongodb";
 import { getUserProfile, initializeFirebase } from "@/lib/firebase-admin";
 import admin from "firebase-admin";
-import { jsonSuccess } from "@/lib/api-response";
+import { success } from "@/lib/api-response";
 import { z } from "zod";
 import { withErrorHandler, parseJSON } from "@/lib/error-handler";
 import { requireAuth } from "@/lib/rbac";
@@ -174,8 +173,6 @@ export const PATCH = withErrorHandler(async (request) => {
     if (Object.keys(firestoreProfileUpdate).length > 0) {
       try {
         await admin.firestore().collection("users").doc(targetUserId).update(firestoreProfileUpdate);
-
-                console.log(`[Firestore Sync] Profile synced for user: ${targetUserId}`);
       } catch (syncError) {
         console.error("Firestore profile sync failed:", syncError);
       }
@@ -184,5 +181,5 @@ export const PATCH = withErrorHandler(async (request) => {
 
   
 
-  return NextResponse.json({ message: "Settings saved successfully" });
+  return success({ message: "Settings saved successfully" });
 });
