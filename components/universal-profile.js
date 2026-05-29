@@ -329,8 +329,7 @@ export default function UniversalProfile() {
 
       if (!detection) {
         toast.error("Could not detect a clear face. Please upload a clear headshot photo.", { id: detectToast });
-        e.target.value = ""; // ✨ Added: Clears the file input registry cleanly
-        handleCancelPreview();
+        handleCancelPreview(); // resets fileInputRef.current.value internally
         return;
       }
 
@@ -339,8 +338,7 @@ export default function UniversalProfile() {
     } catch (err) {
       console.error("Face detection error during profile update:", err);
       toast.error("Error analyzing image file. Please ensure it is a valid face image.", { id: detectToast });
-      e.target.value = ""; // ✨ Added: Clears the input if face-api throws an unhandled error
-      handleCancelPreview();
+      handleCancelPreview(); // resets fileInputRef.current.value internally
       return;
     }
 

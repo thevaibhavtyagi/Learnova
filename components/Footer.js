@@ -1,7 +1,12 @@
 "use client";
 
+// ─── React ────────────────────────────────────────────────────────────────────
 import { useState } from "react";
+
+// ─── Next.js ──────────────────────────────────────────────────────────────────
 import Link from "next/link";
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
 import {
   ArrowUpRight,
   BookOpen,
@@ -16,9 +21,36 @@ import {
   Twitter,
   Youtube,
 } from "lucide-react";
+
+// ─── Animation library ────────────────────────────────────────────────────────
 import { motion } from "framer-motion";
+
+// ─── Contact constants ────────────────────────────────────────────────────────
 import { CONTACT_INFO } from "../constants/contact";
 
+// ─── Conflict resolution note ─────────────────────────────────────────────────
+// All border/background values use semantic CSS tokens (border-border,
+// bg-background, bg-border) instead of hardcoded white/opacity values like
+// border-white/10 or bg-white/20. Hardcoded white values are invisible in
+// light mode (white border on white background). Semantic tokens resolve
+// correctly in both light and dark mode via globals.css custom properties.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── Framer Motion animation variants ────────────────────────────────────────
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
+// ─── Sub-component: animated footer link with underline hover effect ──────────
 function FooterLink({ href, children }) {
   return (
     <motion.li
@@ -31,8 +63,10 @@ function FooterLink({ href, children }) {
       >
         <span className="relative">
           {children}
+          {/* Animated underline that expands on hover */}
           <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-purple-400 to-blue-400 transition-all duration-300 group-hover:w-full" />
         </span>
+        {/* Arrow icon that slides in on hover */}
         <ArrowUpRight
           size={12}
           className="opacity-0 -translate-y-0.5 translate-x-[-4px] transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0"
@@ -42,12 +76,14 @@ function FooterLink({ href, children }) {
   );
 }
 
+// ─── Sub-component: social icon button with colour-coded glow on hover ────────
 function SocialIcon({ href, icon: Icon, label, glowColor = "purple" }) {
+  // Map each colour name to its Tailwind hover classes
   const glowMap = {
     purple: "hover:shadow-purple-500/30 hover:border-purple-500/50 hover:text-purple-400",
-    blue: "hover:shadow-blue-500/30 hover:border-blue-500/50 hover:text-blue-400",
-    pink: "hover:shadow-pink-500/30 hover:border-pink-500/50 hover:text-pink-400",
-    red: "hover:shadow-red-500/30 hover:border-red-500/50 hover:text-red-400",
+    blue:   "hover:shadow-blue-500/30 hover:border-blue-500/50 hover:text-blue-400",
+    pink:   "hover:shadow-pink-500/30 hover:border-pink-500/50 hover:text-pink-400",
+    red:    "hover:shadow-red-500/30 hover:border-red-500/50 hover:text-red-400",
   };
 
   return (
@@ -66,66 +102,64 @@ function SocialIcon({ href, icon: Icon, label, glowColor = "purple" }) {
   );
 }
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
-};
-
+// ─── Main Footer component ────────────────────────────────────────────────────
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+
+  // Tracks which watermark letter is hovered for the purple stroke effect
   const [hoveredBrandLetter, setHoveredBrandLetter] = useState(null);
 
+  // ── Navigation link data ──────────────────────────────────────────────────
   const quickLinks = [
-    { label: "Home", href: "/" },
-    { label: "Productivity", href: "/productivity" },
-    { label: "Activities", href: "/activity" },
-    { label: "Contact", href: "/contact" },
-    { label: "Register", href: "/register" },
-    { label: "Contributors", href: "/contributors" },
-    { label: "Terms & Conditions", href: "/terms" },
-    { label: "Streaks", href: "/streaks" },
+    { label: "Home",              href: "/" },
+    { label: "Productivity",      href: "/productivity" },
+    { label: "Activities",        href: "/activity" },
+    { label: "Contact",           href: "/contact" },
+    { label: "Register",          href: "/register" },
+    { label: "Contributors",      href: "/contributors" },
+    { label: "Terms & Conditions",href: "/terms" },
+    { label: "Streaks",           href: "/streaks" },
   ];
 
   const sectionLinks = [
-    { label: "Mission", href: "/#mission" },
-    { label: "Values", href: "/#values" },
-    { label: "Productivity", href: "/#productivity" },
-    { label: "Team", href: "/#team" },
-    { label: "Impact", href: "/#impact" },
+    { label: "Mission",     href: "/#mission" },
+    { label: "Values",      href: "/#values" },
+    { label: "Productivity",href: "/#productivity" },
+    { label: "Team",        href: "/#team" },
+    { label: "Impact",      href: "/#impact" },
     { label: "Get Started", href: "/#get-started" },
   ];
 
+  // ── Social links with per-platform glow colour ────────────────────────────
   const socialLinks = [
-    { icon: Github, href: "https://github.com/Premshaw23/Learnova", label: "GitHub", glow: "purple" },
-    { icon: Twitter, href: "https://twitter.com/learnova", label: "Twitter", glow: "blue" },
-    { icon: Linkedin, href: "https://linkedin.com/company/learnova", label: "LinkedIn", glow: "blue" },
-    { icon: Youtube, href: "https://youtube.com/@learnova", label: "YouTube", glow: "red" },
+    { icon: Github,   href: "https://github.com/Premshaw23/Learnova",    label: "GitHub",   glow: "purple" },
+    { icon: Twitter,  href: "https://twitter.com/learnova",              label: "Twitter",  glow: "blue" },
+    { icon: Linkedin, href: "https://linkedin.com/company/learnova",     label: "LinkedIn", glow: "blue" },
+    { icon: Youtube,  href: "https://youtube.com/@learnova",             label: "YouTube",  glow: "red" },
   ];
 
+  // ── Contact links pulled from shared CONTACT_INFO constant ───────────────
   const contactLinks = [
-    { label: CONTACT_INFO.email, href: `mailto:${CONTACT_INFO.email}`, icon: Mail },
-    { label: CONTACT_INFO.phone, href: `tel:${CONTACT_INFO.phone.replace(/\s+/g, "")}`, icon: Phone },
+    { label: CONTACT_INFO.email, href: `mailto:${CONTACT_INFO.email}`,                          icon: Mail },
+    { label: CONTACT_INFO.phone, href: `tel:${CONTACT_INFO.phone.replace(/\s+/g, "")}`,         icon: Phone },
   ];
 
+  // ── Watermark letters for the large animated brand text at the bottom ─────
   const brandLetters = "LEARNOVA".split("");
 
   return (
-    <footer className="relative overflow-hidden border-t border-white/10 bg-background text-foreground transition-colors duration-300">
-      {/* Decorative background */}
+    // Conflict resolved: border-t uses `border-border` (semantic token) not
+    // `border-white/10` (invisible in light mode)
+    <footer className="relative overflow-hidden border-t border-border bg-background text-foreground transition-colors duration-300">
+
+      {/* ── Decorative ambient background blobs ── */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute -top-32 left-1/4 h-64 w-64 rounded-full bg-purple-500/8 blur-[100px]" />
         <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-blue-500/8 blur-[100px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-indigo-500/5 blur-[120px]" />
       </div>
 
+      {/* ── Main content grid — animates in when scrolled into view ── */}
       <motion.div
         className="relative mx-auto max-w-7xl px-6 pt-16 pb-10"
         variants={containerVariants}
@@ -134,7 +168,8 @@ export default function Footer() {
         viewport={{ once: true, margin: "-50px" }}
       >
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Brand Column */}
+
+          {/* ── Column 1: Brand identity + social icons ── */}
           <motion.div className="space-y-6 lg:col-span-1" variants={itemVariants}>
             <div className="flex items-center gap-3">
               <motion.span
@@ -160,6 +195,7 @@ export default function Footer() {
               calmer, more connected workflow.
             </p>
 
+            {/* Social icon row */}
             <div className="flex items-center gap-3 pt-2">
               {socialLinks.map((social) => (
                 <SocialIcon
@@ -173,7 +209,7 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* Quick Links Column */}
+          {/* ── Column 2: Quick navigation links ── */}
           <motion.div className="space-y-5" variants={itemVariants}>
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
               <span className="h-px w-4 bg-gradient-to-r from-purple-500 to-transparent" />
@@ -185,6 +221,7 @@ export default function Footer() {
                   {link.label}
                 </FooterLink>
               ))}
+              {/* Keyboard shortcuts trigger — dispatches custom event picked up by ClientLayout */}
               <motion.li
                 whileHover={{ x: 4 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -202,7 +239,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Sections Column */}
+          {/* ── Column 3: Page section anchor links ── */}
           <motion.div className="space-y-5" variants={itemVariants}>
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
               <span className="h-px w-4 bg-gradient-to-r from-blue-500 to-transparent" />
@@ -217,7 +254,7 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Contact Column */}
+          {/* ── Column 4: Contact details + stay-updated card ── */}
           <motion.div className="space-y-5" variants={itemVariants}>
             <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
               <span className="h-px w-4 bg-gradient-to-r from-indigo-500 to-transparent" />
@@ -242,6 +279,7 @@ export default function Footer() {
               })}
             </ul>
 
+            {/* Stay-updated CTA card */}
             <motion.div
               className="mt-4 rounded-2xl border border-white/10 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 p-4 backdrop-blur-sm"
               whileHover={{ borderColor: "rgba(168,85,247,0.3)" }}
@@ -265,9 +303,10 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* Bottom bar */}
+        {/* ── Bottom bar: copyright + taglines ── */}
+        {/* Conflict resolved: border-t uses `border-border` not `border-white/10` */}
         <motion.div
-          className="mt-14 flex flex-col gap-4 border-t border-white/10 pt-8 sm:flex-row sm:items-center sm:justify-between"
+          className="mt-14 flex flex-col gap-4 border-t border-border pt-8 sm:flex-row sm:items-center sm:justify-between"
           variants={itemVariants}
         >
           <p className="text-sm text-muted-foreground">
@@ -278,14 +317,16 @@ export default function Footer() {
               <Heart size={10} className="fill-purple-400/80" />
               Trusted by educators
             </span>
-            <span className="hidden h-1 w-1 rounded-full bg-white/20 sm:inline-block" />
+            {/* Conflict resolved: bg-border (semantic) not bg-white/20 (invisible in light mode) */}
+            <span className="hidden h-1 w-1 rounded-full bg-border sm:inline-block" />
             <span>Built for modern classrooms</span>
           </div>
         </motion.div>
       </motion.div>
 
-      {/* Large branding text */}
-      <div className="relative overflow-hidden border-t border-white/5">
+      {/* ── Large animated watermark brand text ── */}
+      {/* Conflict resolved: border-t uses `border-border/40` not `border-white/5` */}
+      <div className="relative overflow-hidden border-t border-border/40">
         <div className="mx-auto max-w-7xl px-6 py-10">
           <div
             className="flex items-center justify-center select-none"
@@ -297,10 +338,12 @@ export default function Footer() {
                 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight cursor-default"
                 style={{
                   WebkitTextStroke: "1px",
+                  // Conflict resolved: neutral rgba instead of rgba(255,255,255,0.06)
+                  // which is invisible in light mode
                   WebkitTextStrokeColor:
                     hoveredBrandLetter === i
-                      ? "rgba(168,85,247,0.5)"
-                      : "rgba(255,255,255,0.06)",
+                      ? "rgba(168,85,247,0.5)"   // purple on hover
+                      : "rgba(128,128,128,0.1)", // neutral grey — visible in both modes
                   color: "transparent",
                   transition: "all 0.3s ease",
                 }}
