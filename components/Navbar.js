@@ -133,7 +133,7 @@ export function Navbar() {
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [handleClickOutside]);
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -156,6 +156,20 @@ export function Navbar() {
     setIsMenuOpen(false);
     setIsDropdownOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+  const handleResize = () => {
+    // If the window is resized larger than mobile layouts, close the mobile menu
+    if (window.innerWidth >= 640) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  window.addEventListener("resize", handleResize);
+  
+  // ✅ Explicit arrow function hook return to safely purge registration on unmount
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
